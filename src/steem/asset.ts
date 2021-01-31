@@ -45,7 +45,7 @@ export interface SMTAsset {
 /**
  * Asset symbol string.
  */
-export type AssetSymbol = 'STEEM' | 'VESTS' | 'SBD' | 'TESTS' | 'TBD'
+export type AssetSymbol = 'STEEM' | 'VESTS' | 'SBD' | 'TESTS' | 'TBD' | 'CLOUT' | 'BCL' 
 
 /**
  * Class representing a steem asset, e.g. `1.000 STEEM` or `12.112233 VESTS`.
@@ -57,7 +57,7 @@ export class Asset {
      */
     public static fromString(string: string, expectedSymbol?: AssetSymbol) {
         const [amountString, symbol] = string.split(' ')
-        if (['STEEM', 'VESTS', 'SBD', 'TESTS', 'TBD'].indexOf(symbol) === -1) {
+        if (['CLOUT', 'BCL', 'STEEM', 'VESTS', 'SBD', 'TESTS', 'TBD'].indexOf(symbol) === -1) {
             throw new Error(`Invalid asset symbol: ${ symbol }`)
         }
         if (expectedSymbol && symbol !== expectedSymbol) {
@@ -115,6 +115,8 @@ export class Asset {
         switch (this.symbol) {
             case 'TESTS':
             case 'TBD':
+            case 'CLOUT':
+            case 'BCL':
             case 'STEEM':
             case 'SBD':
                 return 3
@@ -122,6 +124,22 @@ export class Asset {
                 return 6
         }
     }
+
+
+    /**
+   * returns a representation of this asset using only STEEM SBD for
+   * legacy purposes
+   */
+  public steem_symbols(): Asset {
+    switch (this.symbol) {
+      case 'CLOUT':
+        return Asset.from(this.amount, 'STEEM')
+      case 'BCL':
+        return Asset.from(this.amount, 'SBD')
+      default:
+        return this
+    }
+  }
 
     /**
      * Return a string representation of this asset, e.g. `42.000 STEEM`.
