@@ -133,9 +133,9 @@ export class Asset {
   public steem_symbols(): Asset {
     switch (this.symbol) {
       case 'CLOUT':
-        return Asset.from(this.amount, 'CLOUT')
+        return Asset.from(this.amount, 'STEEM')
       case 'BCL':
-        return Asset.from(this.amount, 'BCL')
+        return Asset.from(this.amount, 'SBD')
       default:
         return this
     }
